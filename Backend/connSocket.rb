@@ -1,0 +1,36 @@
+require "socket";
+
+
+class ConnSocket
+
+    @port
+    @udpSock = UDPSocket.new
+    @mutex
+
+    @dataCallback
+
+    def initialize(port, mutex, callback)
+        @port = port;
+        @dataCallback = callback;
+        @mutex = mutex;
+
+        @udpSock = UDPSocket.new
+
+        @udpSock.bind("0.0.0.0", 4500);
+    end
+
+    def startListener()
+        udpThread = Thread.new{
+            @mutex.synchronize{
+                while(true)
+                    data = @udpSock.recvfrom(255)[0];
+                    @dataCallback.call(data);
+                end
+            }
+        }
+
+        udpThread.join();
+    end
+
+
+end
