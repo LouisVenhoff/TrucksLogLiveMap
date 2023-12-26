@@ -1,6 +1,7 @@
 load "connSocket.rb"
 load "player.rb"
 load "mapManager.rb"
+load "webInterface.rb";
 require "json"
 
 @playerArrMutex = Mutex.new
@@ -14,9 +15,12 @@ def udpResultReader(result)
 
 end
 
-conn = ConnSocket.new(4500, @playerArrMutex, method(:udpResultReader))
+conn = ConnSocket.new(4501, @playerArrMutex, method(:udpResultReader))
 
 conn.startListener();
+
+@webserver = WebInterface.new(3000);
+@webserver.startServer();
 
 
 
