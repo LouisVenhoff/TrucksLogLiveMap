@@ -1,3 +1,5 @@
+require "json";
+
 class Player
 
     @clientKey;
@@ -7,11 +9,22 @@ class Player
 
     @timeStamp;
 
+
+    PlayerDto = Struct.new(:key, :x, :y, :h);
+
     def initialize(rawObj)
         @clientKey = rawObj.clientKey;
         @xPosition = rawObj.x;
         @yPosition = rawObj.y;
         @heading = rawObj.heading;
+        @timeStamp = 0;
+    end
+
+    def initialize(clientKey, x, y, heading)
+        @clientKey = clientKey;
+        @xPosition = x;
+        @yPosition = y;
+        @heading = heading;
         @timeStamp = 0;
     end
 
@@ -40,6 +53,13 @@ class Player
         else
             return true;
         end
+
+    end
+
+    def getObjJSON
+        dto = PlayerDto.new(@clientKey, @xPosition, @yPosition, @heading);
+
+        return dto.to_h.to_json();
 
     end
 

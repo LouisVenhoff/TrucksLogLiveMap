@@ -29,7 +29,7 @@ class ConnSocket
             }
         }
 
-        udpThread.join();
+        #udpThread.join();
     end
 
 

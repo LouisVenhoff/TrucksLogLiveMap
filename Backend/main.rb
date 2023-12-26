@@ -22,7 +22,16 @@ conn.startListener();
 @webserver = WebInterface.new(3000);
 @webserver.startServer();
 
+p1 = Player.new("Spieler1", 1, 1, 1);
+p2 = Player.new("Spieler2", 2, 2, 2);
+p3 = Player.new("Spieler3", 3, 3, 3);
 
+
+
+while(true)
+    sleep(1);
+    @webserver.sendMapInformation([p1, p2, p3]);
+end
 
 puts("Program Finished");
 
