@@ -9,16 +9,25 @@ class WebInterface
     @server;
 
     @sockets;
+    @parsers;
+
+    
 
     def initialize(port)
         @port = port;
         @sockets = [];
+        @parsers = [];
         @server = TCPServer.new("0.0.0.0", @port);
+
+       
+
+        
+
     end
 
     def startServer
         
-    handshakeThread = Thread.new{
+    Thread.new{
         loop do
             socket = @server.accept;
             puts "Client is Connecting...";
@@ -48,19 +57,42 @@ Sec-WebSocket-Accept: #{ responseKey }
 
 eos
 
+           # Add onDisconnect event Handler
+             
+        
+            startSocketHandler(socket);
+           
 
             @sockets.push(socket);
 
         end
         
     }
-
-   
-
     end
 
+    def startSocketHandler(socket)
+        Thread.new{
+            wsParser = WebSocket::Parser.new
+            
+            wsParser.on_message do |m|
+                puts "Message received";
+            end 
+            wsParser.on_close do |status, message|
+                socket << WebSocket::Message.close.to_data;
+                socket.close();
+
+                puts "One Client left";
+            end    
+    
+            @parsers.push(wsParser);
+    
+            wsParser << socket.read(4069);
+            
+        }
+    end
+
+
     def sendMapInformation(players)
-        
         sendJSON = parsePlayerArrToJSON(players);
         
         #sendJSON = "Test";

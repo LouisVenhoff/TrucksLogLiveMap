@@ -29,7 +29,7 @@ p3 = Player.new("Spieler3", 3, 3, 3);
 
 
 while(true)
-    sleep(1);
+    sleep(0.2);
     @webserver.sendMapInformation([p1, p2, p3]);
 end
 
