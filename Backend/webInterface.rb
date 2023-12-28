@@ -18,11 +18,6 @@ class WebInterface
         @sockets = [];
         @parsers = [];
         @server = TCPServer.new("0.0.0.0", @port);
-
-       
-
-        
-
     end
 
     def startServer
@@ -81,6 +76,8 @@ eos
                 socket << WebSocket::Message.close.to_data;
                 socket.close();
 
+                @sockets.delete(socket);
+
                 puts "One Client left";
             end    
     
@@ -95,10 +92,13 @@ eos
     def sendMapInformation(players)
         sendJSON = parsePlayerArrToJSON(players);
         
-        #sendJSON = "Test";
-
         for sck in @sockets
+            begin
             sck << WebSocket::Message.new(sendJSON).to_data
+            rescue
+                puts "Got a Closed Socket!"
+                next;
+            end
         end
 
     end

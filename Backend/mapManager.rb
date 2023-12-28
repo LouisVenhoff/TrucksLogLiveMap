@@ -4,9 +4,8 @@ load "player.rb";
 class MapManager
 
     @onlinePlayers;    
- 
-
-    @watcherThread
+    @watcherThread;
+    @webserver;
     
     def initialize(mutex)
         @onlinePlayers = [];
@@ -65,18 +64,23 @@ class MapManager
     def startPlayerWatcher()
        
         @watcherThread = Thread.new{
-            @mutex.synchronize{
                 while(true)
+                    @mutex.synchronize{
                     checkAllPlayers();
-                    begin
-                        @mutex.unlock();
-                    rescue
-                    end
+                    }
                     sleep(5);
                 end
-            }
-
         }
+    end
+
+    def runWebsocket
+        @webserver = WebInterface.new(3000);
+        @webserver.startServer();
+
+        while(true)
+            sleep(0.2);
+            @webserver.sendMapInformation(@onlinePlayers);
+        end
     end
 
 end

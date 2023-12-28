@@ -16,23 +16,23 @@ class Player
         @clientKey = rawObj.clientKey;
         @xPosition = rawObj.x;
         @yPosition = rawObj.y;
-        @heading = rawObj.heading;
+        @heading = rawObj.h;
         @timeStamp = 0;
     end
 
-    def initialize(clientKey, x, y, heading)
-        @clientKey = clientKey;
-        @xPosition = x;
-        @yPosition = y;
-        @heading = heading;
-        @timeStamp = 0;
-    end
+    # def initialize(clientKey, x, y, heading)
+    #     @clientKey = clientKey;
+    #     @xPosition = x;
+    #     @yPosition = y;
+    #     @heading = h;
+    #     @timeStamp = 0;
+    # end
 
     def updatePlayer(rawObj)
         @clientKey = rawObj.clientKey;
         @xPosition = rawObj.x;
         @yPosition = rawObj.y;
-        @heading = rawObj.heading;
+        @heading = rawObj.h;
 
         @timeStamp = Time.now.to_i();
     end

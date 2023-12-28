@@ -16,17 +16,17 @@ class ConnSocket
 
         @udpSock = UDPSocket.new
 
-        @udpSock.bind("0.0.0.0", @port);
+        @udpSock.bind("192.168.178.31", @port);
     end
 
     def startListener()
         udpThread = Thread.new{
-            @mutex.synchronize{
                 while(true)
-                    data = @udpSock.recvfrom(255)[0];
-                    @dataCallback.call(data);
+                    if(@mutex.locked? == false)
+                        data = @udpSock.recvfrom(255)[0];
+                        @dataCallback.call(data);
+                    end        
                 end
-            }
         }
 
         #udpThread.join();
