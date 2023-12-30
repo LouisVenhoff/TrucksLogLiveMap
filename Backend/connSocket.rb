@@ -16,7 +16,7 @@ class ConnSocket
 
         @udpSock = UDPSocket.new
 
-        @udpSock.bind("192.168.178.31", @port);
+        @udpSock.bind("0.0.0.0", @port);
     end
 
     def startListener()
