@@ -74,7 +74,7 @@ class MapManager
     end
 
     def runWebsocket
-        @webserver = WebInterface.new(3000);
+        @webserver = WebInterface.new(4501);
         @webserver.startServer();
 
         while(true)
