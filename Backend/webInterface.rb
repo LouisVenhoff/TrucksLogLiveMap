@@ -97,9 +97,12 @@ eos
             sck << WebSocket::Message.new(sendJSON).to_data
             rescue
                 puts "Got a Closed Socket!"
+                sck = nil;
                 next;
             end
         end
+
+        @sockets.select!{|sck| sck != nil}
 
     end
 
