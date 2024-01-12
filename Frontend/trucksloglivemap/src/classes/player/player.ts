@@ -37,6 +37,10 @@ class Player
         this.heading = heading;
     }
 
+    public get name():string
+    {
+        return "Herbert";
+    }
 
     public get x():number
     {
@@ -47,6 +51,17 @@ class Player
     {
         return this.yPos;
     }
+
+    public get key():string
+    {
+        return this.clientKey;
+    }
+
+    public get isActive():boolean
+    {
+        return this.lastUPdateTimestamp + 5000 < new Date().getTime();
+    }
+
 
     public getHeading()
     {

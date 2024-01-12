@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import GameMap from './components/gameMap/gameMap';
@@ -7,7 +7,7 @@ import WebsocketClient from './classes/websocketClient/websocketClient';
 
 function App() {
 
-  const [currentPlayers, setCurrentPlayers] = useState<Player[]>([]);
+  const currentPlayers:MutableRefObject<Player[]> = useRef<Player[]>([]);
   const [recentPlayerData, setRecentPlayerData] = useState<PlayerPosition[]>([]);
 
   const websocketClient = useRef<WebsocketClient>();
@@ -15,16 +15,57 @@ function App() {
   useEffect(() => {
       websocketClient.current = new WebsocketClient("192.168.178.31", 4501, updatePlayers);
       websocketClient.current.start();
+      startPlayerCollection(10000);
   },[]);
 
   const updatePlayers = (players:PlayerPosition[]) => 
   {
-    setRecentPlayerData(players);
+      
+    for(let i = 0; i < players.length; i++)
+    {
+        let playerIndex:number = currentPlayers.current.findIndex((player:Player) => player.key === players[i].key);
+
+        if(playerIndex === -1)
+        {
+            let newPlayer = new Player(players[i].key, players[i].x, players[i].y, players[i].h);
+            currentPlayers.current.push(newPlayer);
+        }
+        else
+        {
+          currentPlayers.current[i].update(players[i].x, players[i].y, players[i].h);
+        }
+
+    }
+
+      setRecentPlayerData(players);
   }
+
+  const collectInactivePlayers = () => 
+  {
+      let cleanArr:Player[] = [];
+
+      for(let i = 0; i < currentPlayers.current.length; i++)
+      {
+          if(currentPlayers.current[i].isActive)
+          {
+              cleanArr.push(currentPlayers.current[i]);
+          }
+      }
+
+      currentPlayers.current = cleanArr;
+  }
+
+  const startPlayerCollection = async (time:number) => 
+  {
+      setInterval(() => {collectInactivePlayers()}, time);
+  }
+
+
+
   
   return (
     <div className="App">
-        <GameMap playerData={recentPlayerData} />
+        <GameMap positionData={recentPlayerData} playerData={currentPlayers.current} />
     </div>
   );
 }

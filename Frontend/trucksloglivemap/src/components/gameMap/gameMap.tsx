@@ -12,7 +12,8 @@ import Player, { PlayerPosition } from "../../classes/player/player";
 /// url="http://87.106.127.217/map/Tiles/{z}/{x}/{y}.png"
 
 type GameMapProps ={
-    playerData:PlayerPosition[]
+    positionData:PlayerPosition[],
+    playerData:Player[]
 }
 
 const truckIcon = new Icon({
@@ -22,13 +23,14 @@ const truckIcon = new Icon({
 
 
 
-const GameMap:React.FC<GameMapProps> = ({playerData}) => 
+const GameMap:React.FC<GameMapProps> = ({positionData, playerData}) => 
 {
     //const position:LatLngExpression = [33.05000000, 36.9877005];
     
     
 
     const [position, setPosition] = useState<LatLngExpression>([0, 0]);
+    const [players, setPlayers] = useState<Player[]>(playerData);
 
     const [playerMarkers, setPlayerMarkers] = useState<JSX.Element[]>([]);
     //const map = useMap();
@@ -38,20 +40,33 @@ const GameMap:React.FC<GameMapProps> = ({playerData}) =>
     },[]);
 
     useEffect(() => {
-        createPlayerMarkers(playerData);
+        createPlayerMarkers(positionData);
+    },[positionData]);
+
+    useEffect(() => {
+        setPlayers(playerData);
     },[playerData]);
 
-   const createPlayerMarkers = (players:PlayerPosition[]) => 
+   const createPlayerMarkers = (positions:PlayerPosition[]) => 
    {
         let markers:JSX.Element[] = [];
 
-        for(let i = 0; i < players.length; i++)
+        for(let i = 0; i < positions.length; i++)
         {
-            
+
+            let name:string = "Kein Information!";
+
+            let playerIndex:number = players.findIndex((player:Player) => player.key === positions[i].key);
+
+            if(playerIndex !== -1)
+            {
+                name = players[playerIndex].name;
+            }
+
             let currentMarker:JSX.Element = 
-            <Marker position={calculateCoords(players[i].x, players[i].y)} icon={truckIcon}>
+            <Marker position={calculateCoords(positions[i].x, positions[i].y)} icon={truckIcon}>
                 <Popup>
-                    Nickname
+                    {name}
                 </Popup>
 
             </Marker>
