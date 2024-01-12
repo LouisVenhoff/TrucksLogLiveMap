@@ -1,21 +1,20 @@
-import Player from "../player/player";
+import { PlayerPosition } from "../player/player";
 
 class WebsocketClient
 {
     private address:string;
     private port:number;
-    private callback:(playerArr:Player[]) => void;
+    private callback:(playerArr:PlayerPosition[]) => void;
 
     private socket:WebSocket|null = null; 
 
     private started:boolean = false;
 
-    constructor(address:string, port:number, callback:(playerArr:Player[]) => void)
+    constructor(address:string, port:number, callback:(playerArr:PlayerPosition[]) => void)
     {
         this.address = address;
         this.port = port;
         this.callback = callback;
-
     }
 
     public start()
@@ -34,21 +33,21 @@ class WebsocketClient
 
         this.socket.addEventListener("message", (event) => 
         {
-            let players:Player[] = this.parseMessage(event.data);
+            let players:PlayerPosition[] = this.parseMessage(event.data);
             this.callback(players);
         });
     }
 
-    private parseMessage(text:string):Player[]
+    private parseMessage(text:string):PlayerPosition[]
     {
         let rawData:any = JSON.parse(text);
 
-        let currentPlayers:Player[] = [];
+        let currentPlayers:PlayerPosition[] = [];
 
         for(let i = 0; i < rawData.length; i++)
         {
-            let newPlayer = new Player(rawData[i].key, rawData[i].x, rawData[i].y, rawData[i].h);
-            currentPlayers.push(newPlayer);
+            let playerData:PlayerPosition = {x:rawData[i].x, y:rawData[i].y, h:rawData[i].h, key:rawData[i].key};
+            currentPlayers.push(playerData);
         }
 
         return currentPlayers;

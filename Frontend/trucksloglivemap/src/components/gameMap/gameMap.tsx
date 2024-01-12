@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, useMap, Popup } from "react-leaflet";
 import overlay from "../0.png";
 import tileInfo from "../../TileMapInfo.json";
 import "./gameMapStyle.css";
-import Player from "../../classes/player/player";
+import Player, { PlayerPosition } from "../../classes/player/player";
 
 //url="http://87.106.127.217/tiles/{z}/{x}/{y}.png"
 //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -12,7 +12,7 @@ import Player from "../../classes/player/player";
 /// url="http://87.106.127.217/map/Tiles/{z}/{x}/{y}.png"
 
 type GameMapProps ={
-    playerData:Player[]
+    playerData:PlayerPosition[]
 }
 
 const truckIcon = new Icon({
@@ -41,7 +41,7 @@ const GameMap:React.FC<GameMapProps> = ({playerData}) =>
         createPlayerMarkers(playerData);
     },[playerData]);
 
-   const createPlayerMarkers = (players:Player[]) => 
+   const createPlayerMarkers = (players:PlayerPosition[]) => 
    {
         let markers:JSX.Element[] = [];
 

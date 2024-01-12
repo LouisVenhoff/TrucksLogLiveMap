@@ -1,5 +1,15 @@
 import { LatLngExpression } from "leaflet";
 
+export type PlayerPosition =
+{
+    x:number,
+    y:number,
+    h:number,
+    key:string
+}
+
+
+
 class Player
 {
 
